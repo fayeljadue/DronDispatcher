@@ -1,46 +1,111 @@
 package com.feljadue.app.inventory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.feljadue.app.utilities.IWriteArchive;
 import com.feljadue.app.vehicle.IVehicle;
 
 public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 
 	public static final Integer MAX_DELIVERY_BLOCKS = 10;
+	public static final Integer MAX_LUCH_DELIVERY = 3;
+	private HashMap<Integer, List<String>> deliveryRoutes;
+	private HashMap<Integer, List<String>> verifiedDeliveryRoutes;
+	
 
-	public DeliveryDispatcherImpl() {
-
-	}
-
-	@Override
-	public boolean dispatchLunchs(HashMap<Integer, List<String>> DeliveryRoutes, List<IVehicle> vehicleList) {
-
-		return false;
-	}
-
-	@Override
-	public HashMap<Integer,List<String>> verifyRoutes(HashMap<Integer, List<String>> deliveryRoutes) {
-
-		HashMap<Integer, List<String>> verifiedDeliveryRoutes = new HashMap<Integer, List<String>>();
+	public DeliveryDispatcherImpl(HashMap<Integer, List<String>> deliveryRoutes) {
+		HashMap<Integer, List<String>> copyDeliveryRoutes = new HashMap<Integer, List<String>>();
 		
-		for (Map.Entry<Integer, List<String>> entry : deliveryRoutes.entrySet()) {
-			verifiedDeliveryRoutes.put(entry.getKey(), entry.getValue());
-			List<String> validRoutes = validateRoutes(entry.getValue());
-			verifiedDeliveryRoutes.replace(entry.getKey(), validRoutes);
+		if(deliveryRoutes != null) {
+			for (Map.Entry<Integer, List<String>> entry : deliveryRoutes.entrySet())
+		    {
+				copyDeliveryRoutes.put(entry.getKey(),
+		           new ArrayList<String>(entry.getValue()));
+		    }
+			this.deliveryRoutes = copyDeliveryRoutes;
+		}else {
+			this.deliveryRoutes = null;
 		}
 		
-		return verifiedDeliveryRoutes;
+		this.verifiedDeliveryRoutes = new HashMap<Integer, List<String>>();
 	}
 
+	@Override
+	public boolean dispatchLunchs(List<IVehicle> vehicleList) {
+		
+		boolean assigment = false;
+		
+		if(!vehicleList.isEmpty() || !verifiedDeliveryRoutes.isEmpty()) {
+			for (Map.Entry<Integer, List<String>> entry : verifiedDeliveryRoutes.entrySet()) {
+				int dronId = entry.getKey();
+				for (int i = 0; i < vehicleList.size(); i++) {
+					if (vehicleList.get(i).getVehiculeId() == dronId) {
+						vehicleList.get(i).setRoutes(new ArrayList<>(entry.getValue()));
+						
+						i = vehicleList.size();
+					}
+				}
+			}
+			assigment = true;
+		}
+		return assigment;
+	}
+
+	@Override
+	public HashMap<Integer,List<String>> verifyRoutes() {
+
+		HashMap<Integer, List<String>> verifiedDeliveryRoutes = new HashMap<Integer, List<String>>();
+		if(deliveryRoutes != null) {
+			for (Map.Entry<Integer, List<String>> entry : deliveryRoutes.entrySet()) {
+				verifiedDeliveryRoutes.put(entry.getKey(), new ArrayList<String>(entry.getValue()));
+				List<String> validRoutes = validateRoutes(entry.getValue());
+				verifiedDeliveryRoutes.replace(entry.getKey(), validRoutes);
+			}
+			this.verifiedDeliveryRoutes = verifiedDeliveryRoutes;
+			return verifiedDeliveryRoutes;
+		}else {
+			return null;
+		}
+	}
+
+	@Override
+	public boolean startDispatch(List<IVehicle> vehicleList) {
+		if(!vehicleList.isEmpty()) {
+			for(IVehicle vehicle : vehicleList) {
+				vehicle.startDelivery();
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	@Override
+	public void printDronRoute(List<IVehicle> vehicleList, IWriteArchive writer) {
+		if(!vehicleList.isEmpty()) {
+			for(IVehicle vehicle:vehicleList) {
+				String name = "out"+vehicle.getVehiculeId()+".txt";
+				String vehicleSummary = vehicle.SummaryDeliveryRoutes();
+				try {
+					writer.writeDeliveryRoutes(name, vehicleSummary);
+				} catch (IOException e) {
+					System.out.println("Cant write summary routes for dron number : "+vehicle.getVehiculeId());
+				}
+			}
+		}
+	}
+	
 	private List<String> validateRoutes(List<String> routes) {
 		int posX = 0,posY = 0,orientation = 0;
 		boolean routeOutOfBounds = false;
-
+		List<String> validRoutes = new ArrayList<String>(routes);
+		
 		for (int i = 0; i < routes.size(); i++) {
 			if (!routeOutOfBounds) {
-				for (String routeCommand : routes.get(i).split("")) {
+				for (String routeCommand : validRoutes.get(i).split("")) {
 					HashMap<String, Integer> dronPosition = dronMoveSimultion(routeCommand, posX, posY, orientation);
 					posX = dronPosition.get("posX");
 					posY = dronPosition.get("posY");
@@ -57,6 +122,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 		}
 		return routes;
 	}
+	
 	
 	private HashMap<String, Integer> dronMoveSimultion(String command,int posX,int posY,int orientation) {
 		if (command.equals("A")) {

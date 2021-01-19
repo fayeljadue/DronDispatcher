@@ -1,5 +1,6 @@
 package com.feljadue.app.inventory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.feljadue.app.vehicle.DronVehicle;
@@ -12,6 +13,7 @@ public class DronInventoryImpl implements IInventory{
 	
 	public DronInventoryImpl(int numberOfDrons) {
 		this.maxNumberDrons = numberOfDrons;
+		dronInventory = new ArrayList<IVehicle>();
 		
 		for(int i=1;i<=maxNumberDrons;i++) {
 			dronInventory.add(new DronVehicle(i));

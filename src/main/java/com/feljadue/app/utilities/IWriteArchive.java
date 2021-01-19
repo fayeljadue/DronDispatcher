@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public interface IWriteArchive {
 	
-	public boolean writeDeliveryRoutes(String fileName,String deliveryText) throws IOException;
+	public String writeDeliveryRoutes(String fileName,String deliveryText) throws IOException;
 	
 }

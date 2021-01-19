@@ -6,7 +6,8 @@ public interface IVehicle {
 	
 	public int getVehiculeId();
 	public void setVehiculeId(int id);
-	public void setRoutes(List<String> routes);
+	public List<String> setRoutes(List<String> routes);
+	public List<String> getRoutes();
 	public void startDelivery();
 	public String SummaryDeliveryRoutes();
 
