@@ -45,10 +45,15 @@ public class Main {
 		File fIn = new File("inputRoutes");
 		File fOut = new File("outputRoutesSummary");
 		try{
-		    if(fIn.mkdir() && fOut.mkdir()) { 
-		        System.out.println("Directories Created");
+		    if(fIn.mkdir()) { 
+		        System.out.println("Directorie in Created");
 		    } else {
-		        System.out.println("Directories exists");
+		        System.out.println("Directories in exists");
+		    }
+		    if(fOut.mkdir()) {
+		    	System.out.println("Directorie out Created");
+		    }else {
+		        System.out.println("Directories out exists");
 		    }
 		} catch(Exception e){
 		    e.printStackTrace();
