@@ -15,7 +15,7 @@ import com.feljadue.app.utilities.WriteArchiveImpl;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		//Help to create the diretories if aren´t create
 		init();
 		
 		//Create the i/o intefaces for read and write files in the program

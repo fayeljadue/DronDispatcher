@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.feljadue.app.utilities.IWriteArchive;
 import com.feljadue.app.vehicle.IVehicle;
@@ -16,7 +17,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 	private HashMap<Integer, List<String>> deliveryRoutes;
 	private HashMap<Integer, List<String>> verifiedDeliveryRoutes;
 	
-
+	//Class incharge of de dron routes verification and dron delivery
 	public DeliveryDispatcherImpl(HashMap<Integer, List<String>> deliveryRoutes) {
 		HashMap<Integer, List<String>> copyDeliveryRoutes = new HashMap<Integer, List<String>>();
 		
@@ -34,18 +35,20 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 		this.verifiedDeliveryRoutes = new HashMap<Integer, List<String>>();
 	}
 
+	//Asign the verified routes to the drons, using the list of drones and the mapped routes
 	@Override
 	public boolean dispatchLunchs(List<IVehicle> vehicleList) {
 		
 		boolean assigment = false;
-		
 		if(!vehicleList.isEmpty() || !verifiedDeliveryRoutes.isEmpty()) {
 			for (Map.Entry<Integer, List<String>> entry : verifiedDeliveryRoutes.entrySet()) {
 				int dronId = entry.getKey();
 				for (int i = 0; i < vehicleList.size(); i++) {
 					if (vehicleList.get(i).getVehiculeId() == dronId) {
-						vehicleList.get(i).setRoutes(new ArrayList<>(entry.getValue()));
+						List<String> maxRoutes = new ArrayList<String>(entry.getValue())
+								.stream().limit(MAX_LUCH_DELIVERY).collect(Collectors.toList());
 						
+						vehicleList.get(i).setRoutes(maxRoutes);
 						i = vehicleList.size();
 					}
 				}
@@ -54,7 +57,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 		}
 		return assigment;
 	}
-
+	//verified de routes of the input directory, the number of delivery and the range of deliver
 	@Override
 	public HashMap<Integer,List<String>> verifyRoutes() {
 
@@ -71,7 +74,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 			return null;
 		}
 	}
-
+	//Start the dispatch of the drones
 	@Override
 	public boolean startDispatch(List<IVehicle> vehicleList) {
 		if(!vehicleList.isEmpty()) {
@@ -82,7 +85,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 		}
 		return false;
 	}
-	
+	//Take the route the drones made an with the writer make the reports
 	@Override
 	public void printDronRoute(List<IVehicle> vehicleList, IWriteArchive writer) {
 		if(!vehicleList.isEmpty()) {
@@ -97,7 +100,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 			}
 		}
 	}
-	
+	//Make the validation of the routes for the dron
 	private List<String> validateRoutes(List<String> routes) {
 		int posX = 0,posY = 0,orientation = 0;
 		boolean routeOutOfBounds = false;
@@ -122,8 +125,7 @@ public class DeliveryDispatcherImpl implements IDeliveryDispatcher {
 		}
 		return routes;
 	}
-	
-	
+	//Make the movemt simulation of the drone to know if its valid or not
 	private HashMap<String, Integer> dronMoveSimultion(String command,int posX,int posY,int orientation) {
 		if (command.equals("A")) {
 			if (orientation == 0) {

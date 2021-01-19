@@ -10,7 +10,7 @@ public class DronInventoryImpl implements IInventory{
 	
 	private List<IVehicle> dronInventory;
 	private int maxNumberDrons; 
-	
+	// Create a inventory of drones with the number indicate in the constructor
 	public DronInventoryImpl(int numberOfDrons) {
 		this.maxNumberDrons = numberOfDrons;
 		dronInventory = new ArrayList<IVehicle>();
@@ -20,12 +20,12 @@ public class DronInventoryImpl implements IInventory{
 		}
 	}
 	
-	
+	// List all vehicles in the inventory
 	public List<IVehicle> listVehicules() {
 		return dronInventory;
 	}
 
-	
+	// Add new vehicles to the list
 	public boolean addVehicule(IVehicle vehicule) {
 		boolean operation = false;
 		boolean dronIdExist = false;
@@ -43,7 +43,7 @@ public class DronInventoryImpl implements IInventory{
 		return operation;
 	}
 
-	
+	//Remove a vehicle in the list
 	public boolean removeVehicule(int idVehicle) {
 		boolean remove = false;
 		

@@ -7,8 +7,8 @@ import java.io.IOException;
 public class WriteArchiveImpl implements IWriteArchive{
 	
 	private static final String DIRECTORY_PATH = "outputRoutesSummary";
-
-
+	
+	//Take the name of the file and the text to write to put it into a file.
 	public String writeDeliveryRoutes(String fileName, String deliveryText) throws IOException {
 		
 		File file = new File(DIRECTORY_PATH+"\\"+fileName);

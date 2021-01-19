@@ -16,6 +16,7 @@ public class ReadArchiveImpl implements IReadArchive {
 
 	private final static String DIRECTORY_PATH = "inputRoutes";
 
+	//Read the routes of the list
 	public HashMap<Integer, List<String>> readRoutes() {
 
 		File files = new File(DIRECTORY_PATH);
@@ -34,6 +35,7 @@ public class ReadArchiveImpl implements IReadArchive {
 		return null;
 	}
 
+	//Filter the name of the files in the input directory,
 	private FileFilter filter() {
 		FileFilter fileFilter = new FileFilter() {
 			public boolean accept(File file) {
@@ -48,6 +50,7 @@ public class ReadArchiveImpl implements IReadArchive {
 		return fileFilter;
 	}
 
+	//Helps to read all the lines in the input file
 	private List<String> readAllLines(File file) {
 		List<String> reading = new ArrayList<String>();
 		
@@ -62,7 +65,8 @@ public class ReadArchiveImpl implements IReadArchive {
 
 		return reading;
 	}
-
+	
+	//Take the name of the file, and takes the number of the drone to use
 	private Integer getDronNumber(String fileName) {
 
 		Pattern pattern = Pattern.compile("[0-9]+");

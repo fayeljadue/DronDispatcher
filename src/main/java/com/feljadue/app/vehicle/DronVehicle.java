@@ -11,6 +11,7 @@ public class DronVehicle implements IVehicle {
 	private HashMap<String, Integer> position;
 	private String deliveryRoutesSumary;
 	
+	//Create the dron with and input id
 	public DronVehicle(int id) {
 		this.id = id;
 		this.position = new HashMap<String,Integer>();
@@ -20,21 +21,25 @@ public class DronVehicle implements IVehicle {
 		this.deliveryRoutesSumary = "";
 		this.routes = new ArrayList<String>();
 	}
-
+	
+	//Get the vehicule Id
 	public int getVehiculeId() {
 		return this.id;
 	}
-
+	
+	//Set a new id for a vehicle
 	public void setVehiculeId(int id) {
 		this.id = id;
 	}
 	
+	//Program the routes for the dron to deliver
 	public List<String> setRoutes(List<String> routes) {
 		this.routes.clear();
 		this.routes.addAll(routes);
 		return this.routes;
 	}
-
+	
+	//Start the delivery of the dron using the program route
 	public boolean startDelivery() {
 		boolean deliveryStatus = false;
 		if(!routes.isEmpty()) {
@@ -51,19 +56,22 @@ public class DronVehicle implements IVehicle {
 		}
 		return deliveryStatus;
 	}
-
+	
+	//Set the dron position to the incial position
 	public void returnStart() {
 		this.position.put("posX", 0);
 		this.position.put("posY", 0);
 		this.position.put("orientation", 0);
 	}
-
+	
+	//Retuns de information of the delivery made
 	public String SummaryDeliveryRoutes() {
 		String aux = deliveryRoutesSumary;
 		deliveryRoutesSumary = "";
 		return aux;
 	}
 	
+	//Take the position and write it in the summaryReport
 	private void deliveryWriter(HashMap<String, Integer> position) {
 		
 		String deliveryInfo = "("+position.get("posX")+", "+position.get("posY")+") dirección ";
@@ -78,12 +86,13 @@ public class DronVehicle implements IVehicle {
 		}
 		
 		if(deliveryRoutesSumary.isEmpty()) {
-			deliveryRoutesSumary +="== Reporte de entregas ==\n\n"+deliveryInfo;
+			deliveryRoutesSumary +="== Reporte de entregas ==\n"+deliveryInfo;
 		}else {
 			deliveryRoutesSumary += deliveryInfo; 
 		}
 	}
 	
+	//Make the movement of the drone using the comand
 	private HashMap<String, Integer> move(String command) {
 		Integer x = position.get("posX"); 
 		Integer y = position.get("posY");
@@ -115,7 +124,8 @@ public class DronVehicle implements IVehicle {
 		this.position.put("orientation", orientation);
 		return this.position;
 	}
-
+	
+	//Get the program routes of the drone
 	@Override
 	public List<String> getRoutes() {
 		return this.routes;
