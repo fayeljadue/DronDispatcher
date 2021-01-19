@@ -22,16 +22,16 @@ public class ReadArchiveImpl implements IReadArchive {
 		File content[] = files.listFiles(filter());
 
 		HashMap<Integer, List<String>> dronRoutes = new HashMap<Integer, List<String>>();
-
-		if (content.length > 0) {
-			for (File cont : content) {
-				Integer dronNumber = getDronNumber(cont.getName());
-				dronRoutes.put(dronNumber,readAllLines(cont));
+		if(files.exists()) {
+			if (content.length > 0) {
+				for (File cont : content) {
+					Integer dronNumber = getDronNumber(cont.getName());
+					dronRoutes.put(dronNumber,readAllLines(cont));
+				}
+				return dronRoutes;
 			}
-			return dronRoutes;
-
-		} else
-			return null;
+		}
+		return null;
 	}
 
 	private FileFilter filter() {
