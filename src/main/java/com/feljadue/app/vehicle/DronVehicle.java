@@ -30,11 +30,13 @@ public class DronVehicle implements IVehicle {
 	}
 	
 	public List<String> setRoutes(List<String> routes) {
+		this.routes.clear();
 		this.routes.addAll(routes);
 		return this.routes;
 	}
 
-	public void startDelivery() {
+	public boolean startDelivery() {
+		boolean deliveryStatus = false;
 		if(!routes.isEmpty()) {
 			for(String route: routes) {
 				if(route != null) {
@@ -44,8 +46,10 @@ public class DronVehicle implements IVehicle {
 					deliveryWriter(position);
 				}
 			}
+			deliveryStatus = true;
+			returnStart();
 		}
-		returnStart();
+		return deliveryStatus;
 	}
 
 	public void returnStart() {

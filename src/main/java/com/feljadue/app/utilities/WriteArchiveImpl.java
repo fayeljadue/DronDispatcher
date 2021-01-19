@@ -13,19 +13,23 @@ public class WriteArchiveImpl implements IWriteArchive{
 		
 		File file = new File(DIRECTORY_PATH+"\\"+fileName);
 		FileWriter fileWrite;
-		if(!deliveryText.isEmpty()) {
-			if(file.exists()) {
-				fileWrite = new FileWriter(file.getAbsoluteFile(),true);
-				fileWrite.write(deliveryText);
-				fileWrite.close();
-			}else {
-				if(file.createNewFile()) {
-					fileWrite = new FileWriter(file.getAbsoluteFile(),true);
+		try {
+			if(!deliveryText.isEmpty()) {
+				if(file.exists()) {
+					fileWrite = new FileWriter(file.getAbsoluteFile(),false);
 					fileWrite.write(deliveryText);
 					fileWrite.close();
+				}else {
+					if(file.createNewFile()) {
+						fileWrite = new FileWriter(file.getAbsoluteFile(),false);
+						fileWrite.write(deliveryText);
+						fileWrite.close();
+					}
 				}
+				return deliveryText;
 			}
-			return deliveryText;
+		}catch(IOException e){
+			
 		}
 		return null;
 	}

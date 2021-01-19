@@ -8,7 +8,8 @@ public interface IVehicle {
 	public void setVehiculeId(int id);
 	public List<String> setRoutes(List<String> routes);
 	public List<String> getRoutes();
-	public void startDelivery();
+	public boolean startDelivery();
+	public void returnStart();
 	public String SummaryDeliveryRoutes();
 
 }

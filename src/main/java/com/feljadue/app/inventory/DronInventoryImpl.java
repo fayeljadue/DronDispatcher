@@ -31,7 +31,7 @@ public class DronInventoryImpl implements IInventory{
 		boolean dronIdExist = false;
 		
 		for(int i = 1;i<=dronInventory.size();i++) {
-			if(vehicule.getVehiculeId() == dronInventory.get(i).getVehiculeId()) {
+			if(vehicule.getVehiculeId() == dronInventory.get(i-1).getVehiculeId()) {
 				dronIdExist = true;
 			}
 		}
